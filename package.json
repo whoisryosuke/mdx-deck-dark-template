@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "are-web-components-the-future",
+  "name": "mdx-deck-dark-template",
   "version": "3.0.13",
   "scripts": {
     "start": "mdx-deck deck.mdx",
@@ -13,6 +13,6 @@
     "react-syntax-highlighter": "11.0.2"
   },
   "keywords": [],
-  "description": "Deck created with mdx-deck",
+  "description": "Speaker deck created with mdx-deck",
   "dependencies": {}
 }
