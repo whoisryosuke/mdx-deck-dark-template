@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "are-web-components-the-future",
+  "version": "3.0.13",
+  "scripts": {
+    "start": "mdx-deck deck.mdx",
+    "build": "mdx-deck build deck.mdx",
+    "help": "mdx-deck"
+  },
+  "devDependencies": {
+    "mdx-deck": "^3.0.13",
+    "lodash.merge": "4.6.2",
+    "react-syntax-highlighter": "11.0.2"
+  },
+  "keywords": [],
+  "description": "Deck created with mdx-deck",
+  "dependencies": {}
+}

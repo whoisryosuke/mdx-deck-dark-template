@@ -1,0 +1,210 @@
+import { Head, Notes } from 'mdx-deck'
+import prism from './prism'
+import { theme } from './theme'
+
+export const themes = [ prism, theme ]
+
+<Head>
+  <title>Are Web Components the Future?</title>
+</Head>
+
+# Are Web Components the Future?
+
+---
+
+## What are Web Components?
+
+A combination of 3-4 technologies: 
+
+- [Custom Elements](https://w3c.github.io/webcomponents/spec/custom/)
+- [Shadow DOM](https://www.w3.org/TR/shadow-dom/)
+- [HTML Templates](https://www.w3.org/TR/html-templates/)
+- [Modules (ES6 import/export)](https://github.com/w3c/webcomponents/issues/645)
+
+<Notes>
+You've probably had experience with one of these (Shadow DOM with frameworks, or templates and jQuery).
+
+**ES6 Modules** are the only spec that isn't fully implemented yet.
+
+Sometimes paired with **CSS variables** for native global theming, also not fully implemented.
+</Notes>
+
+---
+
+### Custom Elements
+
+These components extend **HTMLElement**.
+
+```js
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `<h1>Hello world</h1>`;
+  }
+}
+customElements.define('my-component', MyComponent);
+```
+
+---
+
+### HTML Templates
+
+A standard template and container for blog posts:
+
+```html
+<template id="blog-post-template">
+  <li>
+    <span class="title"></span> &mdash; <span class="author"></span>
+  </li>
+</template>
+
+<ul id="blog-posts"></ul>
+```
+
+---
+
+### HTML Templates
+
+Using the template in JS to fill the container:
+
+```js
+const fragment = document.getElementById('blog-post-template');
+const blogPosts = [
+  { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald' },
+  { title: 'A Farewell to Arms', author: 'Ernest Hemingway' },
+  { title: 'Catch 22', author: 'Joseph Heller' }
+];
+
+blogPosts.forEach(blogPost => {
+  // Create an instance of the template content
+  const instance = document.importNode(fragment.content, true);
+  // Add relevant content to the template
+  instance.querySelector('.title').innerHTML = blogPost.title;
+  instance.querySelector('.author').innerHTML = blogPost.author;
+  // Append the instance ot the DOM
+  document.getElementById('blog-posts').appendChild(instance);
+});
+```
+
+---
+
+## Why use Web Components?
+
+100% compability [(except React/Preact)](https://custom-elements-everywhere.com/)
+
+Use inside **HTML**, **Vue**, **Angular**, **React** (*kinda*), and even native apps (using **Ionic**).
+
+Perfect for design systems.
+
+<Notes>
+Rather than create 3 separate component libraries in different frameworks (HTML, React, Vue, etc) like other companies have had to do (IBM, Atlassian, etc), create one! Much less overhead, immense reusability.
+
+Platforms like Angular and Vue modeled themselves after the Web Components standard early on, which is why they look similar (with dashed componnet names).
+</Notes>
+
+---
+
+## How do I use Web Components?
+
+Add a script file to your page that imports the components, and then just use them!
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="../test-components.js"></script>
+</head>
+<body>
+  <test-component></test-component>
+</body>
+</html>
+```
+
+<Notes>No bundling necessary if you didn't use any "future" JS features like decorators.</Notes>
+
+---
+
+### Web Components + React
+
+Web Components use classic JS event listeners to run methods (like opening or closing a modal).
+
+
+```jsx
+export default class MyComponent extends Component {
+  constructor(props) {
+    // Create the ref
+    this.dialog = createRef();
+    // Bind our method to the instance
+    this.onDialogClosed = this.onDialogClosed.bind(this);
+  }
+  componentDidMount() {
+    // Once the component mounds, add the event listener
+    this.dialog.current.addEventListener('dialog-closed', this.onDialogClosed);
+  }
+  render() {
+    return
+      <one-dialog open={this.state.open} ref={this.dialog}>
+        <span slot="heading">Heading text</span>
+      </one-dialog>
+  }
+}
+```
+
+<Notes>
+I excluded some key code, like super(props), and a lifecycle method that would remove the event listener on component unmount.
+
+I have a code example of a React utility function that sets the ref, attaches event listeners, and handles props (`wc()` function).
+</Notes>
+
+---
+
+### The React Problem
+
+React can't send **object** or **array** values through Web Component props, requiring a `JSON.stringify()` and `JSON.parse()`.
+
+<Notes>
+No real solution to this beyond spending the extra computational resources to convert the JSON back and forth.
+</Notes>
+
+---
+
+## Limitations of Web Components
+
+Widely supported in all evergreen browsers and only requires polyfilling in IE11 and older. [The polyfill is available here.](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
+
+Usually uses the shadow DOM, which is fairly supported across browsers, **except for IE11, Edge, and *even* Firefox** (it has it, but requires manual enabling on the user end). This means you will have to polyfill it for those browsers if you plan to use it.
+
+---
+
+## Should I use Web Components today?
+
+**Depends!** Great for base presentational elements, but can be difficult to integrate more complex stateful components into your stack (esp. if using React).
+
+Things only get better and more supported from here:
+- [Storybook for Web Components in Alpha](https://github.com/storybookjs/storybook/tree/next/app/web-components)
+
+And with tooling like Lit-Element or StencilJS, it's fairly approachable to author the components.
+
+---
+
+## Tracking progress
+
+- [Can I Use for Web Components](https://caniuse.com/#search=web%20components)
+- [Custom Elements Everywhere](https://custom-elements-everywhere.com/)
+
+---
+
+## Design Systems using Web Components
+
+- [Material Design Web Components](https://github.com/whoisryosuke/material-components-web-components)
+- [Bolt Design System (more Twig based)](https://boltdesignsystem.com/pattern-lab/?p=viewall-components-button)
+- [aybolit](https://github.com/web-padawan/aybolit/) - handful of lightweight components
+- [Ionic Web Components](https://github.com/ionic-team/ionic/tree/master/core/src/components) (Uses Stencil)
+- [Vaadin](https://vaadin.com/tutorials/using-web-components-in-react) (Lit Element, React, Vue, Angular — Paid)
+- [WiredJS](https://github.com/wiredjs/wired-elements)
+- [Bulmil](https://github.com/Gomah/bulmil#vue) (Bulma CSS in Web Components built with Stencil)
+
+---
+
+## Looking for a simple example?
+
+<https://github.com/whoisryosuke/pure-web-components>
