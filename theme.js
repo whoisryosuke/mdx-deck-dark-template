@@ -16,6 +16,11 @@ export const theme = {
     background: black,
     primary: primary
   },
+  text: {
+    subtitle: {
+      fontWeight: 500,
+    }
+  },
   styles: {
     root: {
       textAlign: "left",
