@@ -8,8 +8,8 @@
     "help": "mdx-deck"
   },
   "devDependencies": {
-    "mdx-deck": "^3.0.13",
     "lodash.merge": "4.6.2",
+    "mdx-deck": "^3.0.13",
     "react-syntax-highlighter": "11.0.2"
   },
   "keywords": [],
